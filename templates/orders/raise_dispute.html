@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center fw-bold mb-4">Raise a Dispute for Order #{{ order.id }}</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="id_reason" class="form-label">Reason for Dispute</label>
+            {{ form.reason }}
+            {% if form.reason.errors %}
+                <div class="text-danger small">{{ form.reason.errors }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="id_description" class="form-label">Detailed Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="text-danger small">{{ form.description.errors }}</div>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-danger w-100 fw-bold">Submit Dispute</button>
+        </form>
+        <div class="text-center mt-3">
+          <a href="{% url 'orders:order_detail' order_id=order.id %}" class="btn btn-secondary btn-sm">Back to Order Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

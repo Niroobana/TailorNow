@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -29,3 +30,33 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} - {self.category.name if self.category else 'N/A'}"
+
+class Dispute(models.Model):
+    STATUS_CHOICES = (
+        ('open', 'Open'),
+        ('in_review', 'In Review'),
+        ('resolved', 'Resolved'),
+        ('closed', 'Closed'),
+    )
+
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='dispute')
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='raised_disputes')
+    reason = models.CharField(max_length=255)
+    description = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    resolved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='resolved_disputes', limit_choices_to={'role': 'admin'})
+
+    def __str__(self):
+        return f"Dispute for Order {self.order.id} - {self.reason}"
+
+class Feedback(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='feedback')
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='order_feedbacks')
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback for Order {self.order.id} - {self.rating}/5"

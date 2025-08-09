@@ -1,47 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}TailorNow{% endblock %}</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-        .navbar-brand {
-            font-weight: bold;
-            color: #ffc107 !important; /* Warning color for brand */
-        }
-        .nav-link {
-            color: #ffffff !important;
-            margin-right: 15px;
-        }
-        .nav-link:hover {
-            color: #ffc107 !important;
-        }
-        .btn-outline-light {
-            border-color: #ffc107;
-            color: #ffc107;
-        }
-        .btn-outline-light:hover {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        .btn-warning {
-            background-color: #ffc107;
-            border-color: #ffc107;
-            color: #212529;
-        }
-        .btn-warning:hover {
-            background-color: #e0a800;
-            border-color: #e0a800;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -61,14 +27,17 @@
                         </li>
                         {% if user.role == 'tailor' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'accounts:tailor_profile' %}">My Profile</a>
+                                <a class="nav-link" href="{% url 'accounts:dashboard' %}#profile-tab">My Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Assigned Jobs</a>
+                                <a class="nav-link" href="{% url 'orders:tailor_assigned_orders' %}">Assigned Jobs</a>
                             </li>
                         {% elif user.role == 'admin' %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin/">Admin Panel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'accounts:analytics_dashboard' %}">Analytics Dashboard</a>
                             </li>
                         {% endif %}
                         <li class="nav-item">
@@ -88,11 +57,9 @@
     </nav>
 
     <div class="container mt-4">
-        {% block content %}
-        <!-- Page content goes here -->
-        {% endblock %}
+        {% block content %}{% endblock %}
     </div>
-    <!-- Bootstrap JS Bundle (optional, for interactive components) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/site.js' %}"></script>
 </body>
 </html>

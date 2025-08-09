@@ -1,0 +1,32 @@
+body {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+.navbar-brand { font-weight: bold; color: #ffc107 !important; }
+.nav-link { color: #ffffff !important; margin-right: 15px; }
+.nav-link:hover { color: #ffc107 !important; }
+.btn-outline-light { border-color: #ffc107; color: #ffc107; }
+.btn-outline-light:hover { background-color: #ffc107; color: #212529; }
+.btn-warning { background-color: #ffc107; border-color: #ffc107; color: #212529; }
+.btn-warning:hover { background-color: #e0a800; border-color: #e0a800; }
+.dashboard-container { padding: 20px; }
+.header-section { background-color: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.summary-cards .card { text-align: left; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.icon-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+.bg-light-blue { background-color: #e0f2f7; }
+.text-blue { color: #007bff; }
+.bg-light-green { background-color: #e6ffe6; }
+.text-green { color: #28a745; }
+.bg-light-orange { background-color: #fff3e0; }
+.text-orange { color: #fd7e14; }
+.bg-light-yellow { background-color: #fffde7; }
+.text-yellow { color: #ffc107; }
+.nav-tabs .nav-link { border: none; background-color: transparent; color: #6c757d; border-bottom: 2px solid transparent; transition: all 0.3s ease; }
+.nav-tabs .nav-link.active { color: #000; border-bottom-color: #ffc107; font-weight: bold; }
+.nav-tabs .nav-link:hover { border-color: #e9ecef #e9ecef #dee2e6; }
+.badge.bg-pending { background-color: #ffc107 !important; color: #000; }
+.badge.bg-assigned { background-color: #0d6efd !important; }
+.badge.bg-in_progress { background-color: #6c757d !important; }
+.badge.bg-completed { background-color: #28a745 !important; }
+.badge.bg-cancelled { background-color: #dc3545 !important; }
+

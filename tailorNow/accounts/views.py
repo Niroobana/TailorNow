@@ -1,8 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from .forms import CustomUserRegistrationForm, TailorRegistrationForm
 from django.contrib.auth.decorators import login_required
-from tailorNow.orders.models import Order
+from tailorNow.orders.models import Order, Dispute, Feedback
+from tailorNow.accounts.forms import AvailabilityForm
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Avg
+from tailorNow.accounts.models import CustomUser, Notification
 
 
 def register(request):
@@ -39,16 +44,58 @@ def user_logout(request):
 @login_required
 def dashboard(request):
     orders = Order.objects.filter(customer=request.user).order_by('-created_at')
+    notifications = request.user.notifications.all()[:20]
     context = {
-        'orders': orders
+        'orders': orders,
+        'notifications': notifications,
     }
     return render(request, 'accounts/dashboard.html', context)
 
+
 @login_required
-def tailor_profile(request):
-    # For now, just display the existing user details.
-    # In the future, you might fetch related tailor-specific data here.
-    return render(request, 'accounts/tailor_profile.html', {'user': request.user})
+def update_availability(request):
+    if not request.user.role == 'tailor':
+        return redirect('accounts:dashboard') # Only tailors can update availability
+
+    if request.method == 'POST':
+        form = AvailabilityForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your availability status has been updated.')
+            return redirect('accounts:dashboard') # Redirect to dashboard after update
+    else:
+        form = AvailabilityForm(instance=request.user)
+    return render(request, 'accounts/update_availability.html', {'form': form})
+
+
+@login_required
+@user_passes_test(lambda user: user.role == 'admin')
+def analytics_dashboard(request):
+    total_orders = Order.objects.count()
+    active_tailors = CustomUser.objects.filter(role='tailor', is_approved=True, is_available=True).count()
+
+    completed_orders = Order.objects.filter(status='completed')
+    avg_completion_time = None
+    if completed_orders.exists():
+        avg_completion_time = f"{completed_orders.count()} orders completed (Placeholder)"
+    else:
+        avg_completion_time = "N/A"
+
+    avg_rating = Feedback.objects.aggregate(avg=Avg('rating'))['avg'] or 0
+    feedback_count = Feedback.objects.count()
+
+    context = {
+        'total_orders': total_orders,
+        'active_tailors': active_tailors,
+        'avg_completion_time': avg_completion_time,
+        'open_disputes': Dispute.objects.filter(status='open').count(),
+        'in_review_disputes': Dispute.objects.filter(status='in_review').count(),
+        'resolved_disputes': Dispute.objects.filter(status='resolved').count(),
+        'closed_disputes': Dispute.objects.filter(status='closed').count(),
+        'avg_rating': avg_rating,
+        'feedback_count': feedback_count,
+    }
+    return render(request, 'accounts/analytics_dashboard.html', context)
 
 
 def tailor_register(request):
@@ -60,4 +107,12 @@ def tailor_register(request):
     else:
         form = TailorRegistrationForm()
     return render(request, 'accounts/tailor_register.html', {'form': form})
+
+
+@login_required
+def mark_notification_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+    notification.is_read = True
+    notification.save()
+    return redirect('accounts:dashboard')
 

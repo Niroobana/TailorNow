@@ -25,7 +25,46 @@
             <p>No reference photo provided.</p>
           {% endif %}
           <div class="mt-4 text-center">
+            {% if request.user.role == 'tailor' and order.assigned_tailor == request.user %}
+              {% if order.status == 'pending' or order.status == 'assigned' %}
+              <form method="post" style="display:inline-block;">
+                {% csrf_token %}
+                <button type="submit" name="action" value="accept" class="btn btn-success me-2">Accept Job</button>
+              </form>
+              <form method="post" style="display:inline-block;">
+                {% csrf_token %}
+                <button type="submit" name="action" value="reject" class="btn btn-danger me-2">Reject Job</button>
+              </form>
+              {% endif %}
+
+              {% if order.status == 'assigned' %}
+              <form method="post" style="display:inline-block;">
+                {% csrf_token %}
+                <button type="submit" name="action" value="mark_in_progress" class="btn btn-info me-2">Mark In Progress</button>
+              </form>
+              {% endif %}
+
+              {% if order.status == 'in_progress' %}
+              <form method="post" style="display:inline-block;">
+                {% csrf_token %}
+                <button type="submit" name="action" value="mark_completed" class="btn btn-success me-2">Mark Completed</button>
+              </form>
+              {% endif %}
+            {% endif %}
+
+            {% if request.user.role == 'customer' %}
+            {% if not order.dispute %}
+            <a href="{% url 'orders:raise_dispute' order_id=order.id %}" class="btn btn-danger me-2">Raise Dispute</a>
+            {% else %}
+            <button class="btn btn-secondary me-2" disabled>Dispute Raised</button>
+            {% endif %}
+            {% if order.status == 'completed' and not order.feedback %}
+            <a href="{% url 'orders:submit_feedback' order_id=order.id %}" class="btn btn-success me-2">Leave Feedback</a>
+            {% endif %}
             <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary me-2">Back to Dashboard</a>
+            {% elif request.user.role == 'tailor' %}
+            <a href="{% url 'orders:tailor_assigned_orders' %}" class="btn btn-secondary me-2">Back to Assigned Jobs</a>
+            {% endif %}
             <a href="#" class="btn btn-info">Track Status (coming soon)</a>
           </div>
         </div>

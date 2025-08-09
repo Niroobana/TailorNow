@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Analytics Dashboard</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Orders</h5>
+                    <p class="card-text display-4">{{ total_orders }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Active Tailors</h5>
+                    <p class="card-text display-4">{{ active_tailors }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Average Completion Time</h5>
+                    <p class="card-text display-4">{{ avg_completion_time }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-center mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Average Rating</h5>
+                    <p class="card-text display-4">{{ avg_rating|floatformat:1 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-center mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Feedback Count</h5>
+                    <p class="card-text display-4">{{ feedback_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Dispute Rates</h5>
+                    <canvas id="disputeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('disputeChart').getContext('2d');
+            var disputeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Open', 'In Review', 'Resolved', 'Closed'],
+                    datasets: [{
+                        label: 'Number of Disputes',
+                        data: [{{ open_disputes }}, {{ in_review_disputes }}, {{ resolved_disputes }}, {{ closed_disputes }}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</div>
+{% endblock %}

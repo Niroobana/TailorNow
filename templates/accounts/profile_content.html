@@ -1,0 +1,48 @@
+{% load static %}
+<div class="card shadow-sm border-0 rounded-4 p-4">
+  <h4 class="fw-bold mb-3">My Profile</h4>
+  <hr>
+  <div class="row mb-3">
+    <div class="col-md-4 text-muted">Email:</div>
+    <div class="col-md-8">{{ request.user.email }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-4 text-muted">Account Type:</div>
+    <div class="col-md-8"><span class="badge bg-secondary">{{ request.user.get_role_display }}</span></div>
+  </div>
+
+  {% if request.user.role == 'tailor' %}
+  <div class="row mb-3">
+    <div class="col-md-4 text-muted">Approval Status:</div>
+    <div class="col-md-8">{% if request.user.is_approved %}
+      <span class="badge bg-success">Approved</span>
+      {% else %}
+      <span class="badge bg-warning">Pending Approval</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-4 text-muted">Availability:</div>
+    <div class="col-md-8">{% if request.user.is_available %}
+      <span class="badge bg-success">Available for Jobs</span>
+      {% else %}
+      <span class="badge bg-danger">Currently Unavailable</span>
+      {% endif %}
+    </div>
+  </div>
+  <hr>
+  <h5 class="fw-bold mb-3">Tailor Details</h5>
+  <p class="text-muted">To add more specific details like your bio or specialization, you would need to extend the user model or create a separate profile model for tailors, which requires database migrations.</p>
+  <div class="mt-3">
+    <a href="{% url 'accounts:update_availability' %}" class="btn btn-sm btn-warning">Update Availability</a>
+  </div>
+  {% endif %}
+
+  {% if request.user.role == 'customer' %}
+  <hr>
+  <h5 class="fw-bold mb-3">Customer Preferences</h5>
+  <p class="text-muted">This section can be expanded to include customer-specific preferences, addresses, etc., if new model fields are added.</p>
+  {% endif %}
+
+</div>
+

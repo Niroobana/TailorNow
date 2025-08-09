@@ -22,3 +22,11 @@ class TailorRegistrationForm(forms.ModelForm):
             user.save()
         return user
 
+class AvailabilityForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['is_available']
+        widgets = {
+            'is_available': forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        }
+

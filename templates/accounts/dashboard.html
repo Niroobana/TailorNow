@@ -14,7 +14,7 @@
       <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
         <div class="flex-grow-1">
           <p class="text-muted mb-0">Active Orders</p>
-          <h4 class="fw-bold">2</h4> <!-- Placeholder -->
+          <h4 class="fw-bold">2</h4>
         </div>
         <span class="icon-circle bg-light-blue text-blue"><i class="bi bi-clock"></i></span>
       </div>
@@ -23,7 +23,7 @@
       <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
         <div class="flex-grow-1">
           <p class="text-muted mb-0">Completed</p>
-          <h4 class="fw-bold">1</h4> <!-- Placeholder -->
+          <h4 class="fw-bold">1</h4>
         </div>
         <span class="icon-circle bg-light-green text-green"><i class="bi bi-check-circle"></i></span>
       </div>
@@ -32,7 +32,7 @@
       <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
         <div class="flex-grow-1">
           <p class="text-muted mb-0">Total Spent</p>
-          <h4 class="fw-bold">$190</h4> <!-- Placeholder -->
+          <h4 class="fw-bold">$190</h4>
         </div>
         <span class="icon-circle bg-light-orange text-orange"><i class="bi bi-box"></i></span>
       </div>
@@ -41,7 +41,7 @@
       <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
         <div class="flex-grow-1">
           <p class="text-muted mb-0">Avg Rating</p>
-          <h4 class="fw-bold">4.8</h4> <!-- Placeholder -->
+          <h4 class="fw-bold">4.8</h4>
         </div>
         <span class="icon-circle bg-light-yellow text-yellow"><i class="bi bi-star"></i></span>
       </div>
@@ -84,11 +84,11 @@
                 </div>
                 <div>
                   <p class="text-muted mb-0"><small>Expected:</small></p>
-                  <p class="fw-bold mb-0">N/A</p> {# Placeholder for expected date #}
+                  <p class="fw-bold mb-0">N/A</p>
                 </div>
                 <div>
                   <p class="text-muted mb-0"><small>Amount:</small></p>
-                  <p class="fw-bold mb-0">$0.00</p> {# Placeholder for amount #}
+                  <p class="fw-bold mb-0">$0.00</p>
                 </div>
                 <div>
                   <span class="badge bg-{{ order.status|lower }} me-2">{{ order.get_status_display }}</span>
@@ -106,70 +106,29 @@
       {% endif %}
     </div>
     <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-      <p>Notifications content will go here.</p>
+      {% if notifications %}
+        <ul class="list-group mb-3">
+          {% for n in notifications %}
+            <li class="list-group-item d-flex justify-content-between align-items-start {% if not n.is_read %}list-group-item-warning{% endif %}">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">{{ n.timestamp|date:"Y-m-d H:i" }}</div>
+                {{ n.message }}
+              </div>
+              {% if not n.is_read %}
+                <a href="{% url 'accounts:mark_notification_read' n.id %}" class="btn btn-sm btn-outline-secondary">Mark as read</a>
+              {% else %}
+                <span class="badge bg-secondary">Read</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-info">No notifications yet.</div>
+      {% endif %}
     </div>
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-      <p>Profile settings will go here.</p>
+      {% include 'accounts/profile_content.html' %}
     </div>
   </div>
 </div>
-
-<style>
-body {
-  background-color: #f5f5f5; /* Lighter background for dashboard */
-}
-.dashboard-container {
-  padding: 20px;
-}
-.header-section {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  margin-bottom: 20px;
-}
-.summary-cards .card {
-  text-align: left;
-  border: none;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-.icon-circle {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-}
-.bg-light-blue { background-color: #e0f2f7; }
-.text-blue { color: #007bff; }
-.bg-light-green { background-color: #e6ffe6; }
-.text-green { color: #28a745; }
-.bg-light-orange { background-color: #fff3e0; }
-.text-orange { color: #fd7e14; }
-.bg-light-yellow { background-color: #fffde7; }
-.text-yellow { color: #ffc107; }
-
-.nav-tabs .nav-link {
-  border: none;
-  background-color: transparent;
-  color: #6c757d;
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s ease;
-}
-.nav-tabs .nav-link.active {
-  color: #000;
-  border-bottom-color: #ffc107;
-  font-weight: bold;
-}
-.nav-tabs .nav-link:hover {
-  border-color: #e9ecef #e9ecef #dee2e6;
-}
-
-.badge.bg-pending { background-color: #ffc107 !important; color: #000; }
-.badge.bg-assigned { background-color: #0d6efd !important; }
-.badge.bg-in_progress { background-color: #6c757d !important; }
-.badge.bg-completed { background-color: #28a745 !important; }
-.badge.bg-cancelled { background-color: #dc3545 !important; }
-</style>
 {% endblock %}

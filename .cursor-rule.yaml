@@ -13,3 +13,5 @@ rules:
     enforcement: required
   - description: Require database migrations to be included with model changes.
     enforcement: required
+  - description: Ensure all web interfaces are designed to be mobile-responsive.
+    enforcement: recommended

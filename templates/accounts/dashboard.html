@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-container">
+  <div class="header-section p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="fw-bold text-dark">Welcome back, {{ request.user.email }}!</h2>
+      <button class="btn btn-dark btn-sm">More options</button>
+    </div>
+    <p class="text-muted">Manage your tailoring orders and track progress</p>
+  </div>
+
+  <div class="summary-cards row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
+        <div class="flex-grow-1">
+          <p class="text-muted mb-0">Active Orders</p>
+          <h4 class="fw-bold">2</h4> <!-- Placeholder -->
+        </div>
+        <span class="icon-circle bg-light-blue text-blue"><i class="bi bi-clock"></i></span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
+        <div class="flex-grow-1">
+          <p class="text-muted mb-0">Completed</p>
+          <h4 class="fw-bold">1</h4> <!-- Placeholder -->
+        </div>
+        <span class="icon-circle bg-light-green text-green"><i class="bi bi-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
+        <div class="flex-grow-1">
+          <p class="text-muted mb-0">Total Spent</p>
+          <h4 class="fw-bold">$190</h4> <!-- Placeholder -->
+        </div>
+        <span class="icon-circle bg-light-orange text-orange"><i class="bi bi-box"></i></span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm rounded-4 p-3 d-flex flex-row align-items-center">
+        <div class="flex-grow-1">
+          <p class="text-muted mb-0">Avg Rating</p>
+          <h4 class="fw-bold">4.8</h4> <!-- Placeholder -->
+        </div>
+        <span class="icon-circle bg-light-yellow text-yellow"><i class="bi bi-star"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="my-orders-tab" data-bs-toggle="tab" data-bs-target="#my-orders" type="button" role="tab" aria-controls="my-orders" aria-selected="true">My Orders</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab" aria-controls="notifications" aria-selected="false">Notifications</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="my-orders" role="tabpanel" aria-labelledby="my-orders-tab">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-dark">My Orders</h3>
+        <a href="{% url 'orders:category_selection' %}" class="btn btn-warning fw-bold"><i class="bi bi-plus-circle me-2"></i>New Order</a>
+      </div>
+
+      {% if orders %}
+        {% for order in orders %}
+        <div class="card shadow-sm rounded-4 mb-3 p-3">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h5 class="fw-bold mb-1">ORD-{{ order.id }}</h5>
+              <p class="text-muted mb-1">{{ order.category.name }}</p>
+              <p class="mb-0"><small>Tailor: {% if order.assigned_tailor %}{{ order.assigned_tailor.email }}{% else %}Not Assigned{% endif %}</small></p>
+            </div>
+            <div class="col-md-6 text-md-end">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <p class="text-muted mb-0"><small>Submitted:</small></p>
+                  <p class="fw-bold mb-0">{{ order.created_at|date:"Y-m-d" }}</p>
+                </div>
+                <div>
+                  <p class="text-muted mb-0"><small>Expected:</small></p>
+                  <p class="fw-bold mb-0">N/A</p> {# Placeholder for expected date #}
+                </div>
+                <div>
+                  <p class="text-muted mb-0"><small>Amount:</small></p>
+                  <p class="fw-bold mb-0">$0.00</p> {# Placeholder for amount #}
+                </div>
+                <div>
+                  <span class="badge bg-{{ order.status|lower }} me-2">{{ order.get_status_display }}</span>
+                </div>
+              </div>
+              <a href="{% url 'orders:order_detail' order_id=order.id %}" class="btn btn-sm btn-outline-secondary mt-2">View Details</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="alert alert-info text-center" role="alert">
+        You haven't placed any orders yet. Click 'New Order' to get started!
+      </div>
+      {% endif %}
+    </div>
+    <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+      <p>Notifications content will go here.</p>
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <p>Profile settings will go here.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+body {
+  background-color: #f5f5f5; /* Lighter background for dashboard */
+}
+.dashboard-container {
+  padding: 20px;
+}
+.header-section {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+.summary-cards .card {
+  text-align: left;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.bg-light-blue { background-color: #e0f2f7; }
+.text-blue { color: #007bff; }
+.bg-light-green { background-color: #e6ffe6; }
+.text-green { color: #28a745; }
+.bg-light-orange { background-color: #fff3e0; }
+.text-orange { color: #fd7e14; }
+.bg-light-yellow { background-color: #fffde7; }
+.text-yellow { color: #ffc107; }
+
+.nav-tabs .nav-link {
+  border: none;
+  background-color: transparent;
+  color: #6c757d;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+.nav-tabs .nav-link.active {
+  color: #000;
+  border-bottom-color: #ffc107;
+  font-weight: bold;
+}
+.nav-tabs .nav-link:hover {
+  border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+.badge.bg-pending { background-color: #ffc107 !important; color: #000; }
+.badge.bg-assigned { background-color: #0d6efd !important; }
+.badge.bg-in_progress { background-color: #6c757d !important; }
+.badge.bg-completed { background-color: #28a745 !important; }
+.badge.bg-cancelled { background-color: #dc3545 !important; }
+</style>
+{% endblock %}

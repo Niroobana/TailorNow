@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row min-vh-100 align-items-center justify-content-center g-0">
+  <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center bg-dark text-white p-5" style="min-height: 100vh;">
+    <div class="mb-4">
+      <span class="d-inline-block bg-warning rounded-circle p-4 mb-3"><!-- Logo/Icon --></span>
+      <h1 class="fw-bold">TailorCraft</h1>
+    </div>
+    <p class="lead text-center mb-4">Join our network of professional tailors.<br>Showcase your skills and get matched with customers.</p>
+    <ul class="list-unstyled">
+      <li class="mb-2"><span class="text-warning me-2">&#9679;</span>Grow your tailoring business</li>
+      <li class="mb-2"><span class="text-warning me-2">&#9679;</span>Get jobs based on your expertise</li>
+      <li><span class="text-warning me-2">&#9679;</span>Work with verified customers</li>
+    </ul>
+  </div>
+  <div class="col-md-6 d-flex align-items-center justify-content-center bg-light" style="min-height: 100vh;">
+    <div class="w-100" style="max-width: 400px;">
+      <div class="card shadow-sm p-4 border-0 rounded-4">
+        <h2 class="fw-bold mb-1 text-center">Tailor Registration</h2>
+        <p class="text-center text-muted mb-4">Sign up to become a tailor. Your account will require admin approval before you can accept jobs.</p>
+        <form method="post" class="mb-3">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+              <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="password" name="password" id="password" class="form-control" placeholder="Create a password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-warning w-100 fw-bold mb-3">Register as Tailor <span class="ms-2">&rarr;</span></button>
+        </form>
+        <div class="text-center">
+          <span class="text-muted">Already have an account?</span> <a href="{% url 'login' %}" class="text-warning fw-bold">Sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+

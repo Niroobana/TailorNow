@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center fw-bold mb-4">My Orders</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      {% if orders %}
+      <div class="list-group">
+        {% for order in orders %}
+        <a href="{% url 'orders:order_detail' order_id=order.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-2 rounded-3 shadow-sm">
+          <div>
+            <h5 class="mb-1">Order #{{ order.id }} - {{ order.category.name }}</h5>
+            <p class="mb-1 text-muted">Submitted: {{ order.created_at|date:"M d, Y H:i" }}</p>
+          </div>
+          <div>
+            <span class="badge bg-{{ order.status|lower }} me-2">{{ order.get_status_display }}</span>
+            {% if order.is_urgent %}<span class="badge bg-danger">Urgent</span>{% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info text-center" role="alert">
+        You haven't placed any orders yet.
+      </div>
+      {% endif %}
+      <div class="text-center mt-4">
+        <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.badge.bg-pending { background-color: #ffc107 !important; color: #000; }
+.badge.bg-assigned { background-color: #0d6efd !important; }
+.badge.bg-in_progress { background-color: #6c757d !important; }
+.badge.bg-completed { background-color: #28a745 !important; }
+.badge.bg-cancelled { background-color: #dc3545 !important; }
+</style>
+{% endblock %}
+

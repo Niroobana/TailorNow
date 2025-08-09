@@ -1,0 +1,15 @@
+rules:
+  - description: Always use open source libraries in this app.
+    enforcement: required
+  - description: Enforce code linting and formatting for all committed code.
+    enforcement: required
+  - description: Require environment variables for secrets; do not hardcode secrets in code.
+    enforcement: required
+  - description: Require documentation for all public APIs and models.
+    enforcement: recommended
+  - description: Require tests for all new features and bug fixes.
+    enforcement: required
+  - description: Disallow committing sensitive files (like .env) to version control.
+    enforcement: required
+  - description: Require database migrations to be included with model changes.
+    enforcement: required

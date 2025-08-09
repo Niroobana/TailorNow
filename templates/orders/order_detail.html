@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center fw-bold mb-4">Order Details (Order #{{ order.id }})</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+          <p><strong>Category:</strong> {{ order.category.name }}</p>
+          <p><strong>Status:</strong> <span class="badge bg-primary">{{ order.get_status_display }}</span> {% if order.is_urgent %}<span class="badge bg-danger ms-2">Urgent</span>{% endif %}</p>
+          <p><strong>Submitted On:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+          {% if order.assigned_tailor %}
+            <p><strong>Assigned Tailor:</strong> {{ order.assigned_tailor.email }}</p>
+          {% else %}
+            <p><strong>Assigned Tailor:</strong> Not yet assigned</p>
+          {% endif %}
+          <hr>
+          <h4>Details</h4>
+          <p><strong>Measurements:</strong><br>{{ order.measurements|linebreaksbr }}</p>
+          <p><strong>Fabric Info:</strong><br>{{ order.fabric_info|linebreaksbr }}</p>
+          {% if order.reference_photo %}
+            <h5>Reference Photo:</h5>
+            <img src="{{ order.reference_photo.url }}" class="img-fluid rounded" alt="Reference Photo" style="max-height: 300px; object-fit: cover;">
+          {% else %}
+            <p>No reference photo provided.</p>
+          {% endif %}
+          <div class="mt-4 text-center">
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary me-2">Back to Dashboard</a>
+            <a href="#" class="btn btn-info">Track Status (coming soon)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

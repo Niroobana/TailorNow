@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center">
+          <h2 class="fw-bold mb-3">Registration Submitted</h2>
+          <p class="lead">Thank you for registering as a tailor!<br>Your account is pending admin approval. You will be notified by email once approved.</p>
+          <a href="{% url 'login' %}" class="btn btn-warning mt-3">Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

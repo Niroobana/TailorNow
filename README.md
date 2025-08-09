@@ -32,3 +32,5 @@ A Django project configured to use MySQL as the database backend.
 ## Notes
 - Ensure MySQL server is running and accessible.
 - Install MySQL server and client if not already installed on your system.
+
+

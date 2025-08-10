@@ -6,21 +6,21 @@
 - [ ] Set up virtual environment and requirements.txt
 
 ## 2. User Authentication & Registration
-- [ ] Customer registration/login (email/mobile)
-- [ ] Tailor registration (admin approval flow)
-- [ ] Admin user setup
-- [ ] Password reset/authentication
+- [.] Customer registration/login (email/mobile)
+- [.] Tailor registration (admin approval flow)
+- [.] Admin user setup
+- [.] Password reset/authentication
 
 ## 3. Customer Features
-- [ ] Service category selection UI
-- [ ] Order form (measurements, fabric, photos)
-- [ ] Order status tracking page
+- [.] Service category selection UI
+- [.] Order form (measurements, fabric, photos)
+- [.] Order status tracking page
 - [ ] Feedback system
 
 ## 4. Tailor Features
-- [ ] Tailor profile page
-- [ ] Availability status update
-- [ ] Assigned orders list
+- [.] Tailor profile page
+- [.] Availability status update
+- [.] Assigned orders list
 - [ ] Accept/reject job actions
 - [ ] Work status update
 

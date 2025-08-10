@@ -20,6 +20,8 @@ def order_submission(request, category_id):
             order = form.save(commit=False)
             order.customer = request.user
             order.category = category
+            if not order.price_cents:
+                order.price_cents = order.compute_price_cents()
             order.save()
             # Notify admins of new order submission
             for admin_user in CustomUser.objects.filter(role='admin'):

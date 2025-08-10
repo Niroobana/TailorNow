@@ -23,6 +23,9 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -44,6 +47,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def get_full_name(self) -> str:
+        full_name = f"{self.first_name} {self.last_name}".strip()
+        return full_name if full_name else self.first_name or ""
+
+    def get_display_name(self) -> str:
+        name = self.get_full_name() or self.first_name
+        return name if name else self.email
 
 
 class Notification(models.Model):

@@ -5,6 +5,12 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
+    icon = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Bootstrap Icons class, e.g. 'bi-scissors' or 'bi-suit'")
+    base_price_cents = models.PositiveIntegerField(default=0, help_text="Default base price (in cents)")
+    urgent_surcharge_percent = models.PositiveIntegerField(default=0, help_text="Urgent surcharge percentage")
 
     def __str__(self):
         return self.name
@@ -27,9 +33,22 @@ class Order(models.Model):
     is_urgent = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     assigned_tailor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_orders', limit_choices_to={'role': 'tailor', 'is_approved': True})
+    # Payments
+    price_cents = models.PositiveIntegerField(default=0, help_text="Amount to collect in cents")
+    is_paid = models.BooleanField(default=False)
+    payment_reference = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return f"Order {self.id} - {self.category.name if self.category else 'N/A'}"
+
+    def compute_price_cents(self) -> int:
+        if not self.category:
+            return 0
+        price = int(self.category.base_price_cents or 0)
+        if self.is_urgent:
+            percent = int(self.category.urgent_surcharge_percent or 0)
+            price = price + round(price * (percent / 100.0))
+        return int(price)
 
 class Dispute(models.Model):
     STATUS_CHOICES = (

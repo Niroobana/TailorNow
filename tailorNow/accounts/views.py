@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from .forms import CustomUserRegistrationForm, TailorRegistrationForm
+from .forms import CustomUserRegistrationForm, TailorRegistrationForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from tailorNow.orders.models import Order, Dispute, Feedback
 from tailorNow.accounts.forms import AvailabilityForm
@@ -17,7 +17,7 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            return redirect('login')
+            return redirect('accounts:login')
     else:
         form = CustomUserRegistrationForm()
     return render(request, 'accounts/register.html', {'form': form})
@@ -45,9 +45,18 @@ def user_logout(request):
 def dashboard(request):
     orders = Order.objects.filter(customer=request.user).order_by('-created_at')
     notifications = request.user.notifications.all()[:20]
+    if request.method == 'POST' and request.POST.get('form') == 'profile_update':
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('accounts:dashboard')
+    else:
+        form = ProfileUpdateForm(instance=request.user)
     context = {
         'orders': orders,
         'notifications': notifications,
+        'profile_form': form,
     }
     return render(request, 'accounts/dashboard.html', context)
 

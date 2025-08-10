@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -23,6 +24,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('tailorNow.accounts.urls')),
     path('orders/', include('tailorNow.orders.urls')),
+    path('payments/', include('tailorNow.payments.urls')),
+    # Redirect root to dashboard (login_required will bounce unauthenticated users to accounts:login)
+    path('', RedirectView.as_view(pattern_name='accounts:dashboard', permanent=False)),
 ]
 
 if settings.DEBUG:

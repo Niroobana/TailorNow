@@ -14,8 +14,10 @@ class ContentSecurityPolicyMiddleware(MiddlewareMixin):
             "style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; "
             "img-src 'self' data:; "
             "font-src 'self' https://cdn.jsdelivr.net; "
-            "connect-src 'self'; "
+            "connect-src 'self' https://api.stripe.com; "
+            "frame-src 'self' https://js.stripe.com; "
             "frame-ancestors 'none'"
         )
         response['Content-Security-Policy'] = csp
         return response
+

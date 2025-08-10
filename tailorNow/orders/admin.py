@@ -5,12 +5,15 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.urls import reverse
 
-admin.site.register(Category)
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'base_price_cents', 'urgent_surcharge_percent')
+    search_fields = ('name',)
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'customer', 'category', 'status', 'is_urgent', 'assigned_tailor', 'created_at')
-    list_filter = ('status', 'is_urgent', 'category', 'assigned_tailor')
+    list_display = ('id', 'customer', 'category', 'status', 'is_urgent', 'assigned_tailor', 'created_at', 'price_cents', 'is_paid')
+    list_filter = ('status', 'is_urgent', 'category', 'assigned_tailor', 'is_paid')
     search_fields = ('customer__email', 'assigned_tailor__email', 'category__name')
     raw_id_fields = ('customer',)
 
@@ -30,6 +33,10 @@ class OrderAdmin(admin.ModelAdmin):
             except Order.DoesNotExist:
                 pass
         super().save_model(request, obj, form, change)
+        # Recompute price if needed
+        if obj.price_cents == 0 and obj.category:
+            obj.price_cents = obj.compute_price_cents()
+            obj.save(update_fields=['price_cents'])
         # Notify on assignment changes
         if obj.assigned_tailor and obj.assigned_tailor != previous_assigned_tailor:
             Notification.objects.create(

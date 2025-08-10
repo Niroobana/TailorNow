@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
 </head>
 <body>
+  {% load currency_filters %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'accounts:dashboard' %}">TailorNow</a>
